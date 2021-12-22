@@ -8,8 +8,8 @@ import views.EmployeeManagementForm;
 
 public class EmployeeHandler {
 
-	public static EmployeeHandler handler = null;
-	public Employee employee;
+	private static EmployeeHandler handler = null;
+	private Employee employee;
 	private String errorMessage;
 	
 	public EmployeeHandler() {

@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -16,11 +15,11 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -29,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 
 import handlers.EmployeeHandler;
 import handlers.PositionHandler;
+import handlers.VoucherHandler;
 import models.Employee;
 import models.Position;
 
@@ -36,12 +36,13 @@ public class EmployeeManagementForm implements ActionListener {
 	
 	private JFrame frame;
 	private JMenuBar menuBar;
-	private JMenu menuEmployees, menuProducts, menuVouchers, menuCart, menuTransactions;
+	private JMenuItem menuEmployees, menuProducts, menuCart, menuTransactions, menuVouchers, menuLogout;
 	private JPanel mainPanel, headerPanel, tablePanel, formPanel, centerPanel, btnPanel;
 	private JTable table;
 	private JScrollPane scrollPane;
 	private JButton btnInsert, btnUpdate, btnDelete, btnCancel;
-	private JTextField txtEmployeeID, txtPositionID, txtName, txtSalary, txtUsername, txtPassword;
+	private JTextField txtEmployeeID, txtPositionID, txtName, txtSalary, txtUsername;
+	private JPasswordField txtPassword;
 	private JComboBox<Position> listPosition;
 	private JLabel lblEmployeeID, lblPositionID, lblName, lblSalary, lblUsername, lblPassword;
 	
@@ -60,19 +61,22 @@ public class EmployeeManagementForm implements ActionListener {
 
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
-		menuEmployees = new JMenu("Employees");
-		menuEmployees.setOpaque(true);
+		menuEmployees = new JMenuItem("Employees");
+		menuProducts = new JMenuItem("Products");
+		menuVouchers = new JMenuItem("Vouchers");
+		menuCart = new JMenuItem("Cart");
+		menuTransactions = new JMenuItem("Transactions");
+		menuLogout = new JMenuItem("Logout");
+
+		menuEmployees.setOpaque(true);		
 		menuEmployees.setBackground(Color.ORANGE);
-		menuProducts = new JMenu("Products");
-		menuVouchers = new JMenu("Vouchers");
-		menuCart = new JMenu("Cart");
-		menuTransactions = new JMenu("Transactions");
 		
 		menuBar.add(menuEmployees);
 		menuBar.add(menuProducts);
 		menuBar.add(menuVouchers);
 		menuBar.add(menuCart);
 		menuBar.add(menuTransactions);
+		menuBar.add(menuLogout);
 	}
 	
 	private void initHeaderPanel() {
@@ -120,7 +124,7 @@ public class EmployeeManagementForm implements ActionListener {
 		lblUsername = new JLabel("Username");
 		txtUsername = new JTextField();
 		lblPassword = new JLabel("Password");
-		txtPassword = new JTextField();
+		txtPassword = new JPasswordField();
 		
 		formPanel.add(lblEmployeeID);
 		formPanel.add(txtEmployeeID);
@@ -168,7 +172,7 @@ public class EmployeeManagementForm implements ActionListener {
 	}
 	
 	private void loadData() {
-		String [] columns = {"Employee ID", "Position", "Name", "Salary", "Username", "Password"};
+		String [] columns = {"Employee ID", "Position", "Name", "Salary","Status", "Username", "Password"};
 		DefaultTableModel dtm = new DefaultTableModel(columns, 0);
 		
 		Vector<Object> dataList;
@@ -181,6 +185,7 @@ public class EmployeeManagementForm implements ActionListener {
 			dataList.add(position.getName());
 			dataList.add(employee.getName());
 			dataList.add(employee.getSalary());
+			dataList.add(employee.getStatus());
 			dataList.add(employee.getUsername());
 			dataList.add(employee.getPassword());
 			dtm.addRow(dataList);
@@ -197,6 +202,8 @@ public class EmployeeManagementForm implements ActionListener {
 		menuProducts.addActionListener(this);
 		menuVouchers.addActionListener(this);
 		menuCart.addActionListener(this);
+		menuTransactions.addActionListener(this);
+		menuLogout.addActionListener(this);
 		
 		table.addMouseListener(new MouseAdapter() {
 		
@@ -205,8 +212,8 @@ public class EmployeeManagementForm implements ActionListener {
 				txtEmployeeID.setText(String.valueOf(table.getValueAt(row,0)));
 				txtName.setText((String) table.getValueAt(row, 2));
 				txtSalary.setText(String.valueOf(table.getValueAt(row, 3)));
-				txtUsername.setText((String) table.getValueAt(row, 4));
-				txtPassword.setText((String) table.getValueAt(row, 5));
+				txtUsername.setText((String) table.getValueAt(row, 5));
+				txtPassword.setText((String) table.getValueAt(row, 6));
 				setInsertView(false);
 			}
 		});
@@ -216,7 +223,7 @@ public class EmployeeManagementForm implements ActionListener {
 		frame = new JFrame("Coffee Vibes - Group 2 - BD01");
 		frame.setJMenuBar(menuBar);
 		frame.add(mainPanel);
-		frame.setSize(600, 600);
+		frame.setSize(650, 600);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
@@ -325,10 +332,13 @@ public class EmployeeManagementForm implements ActionListener {
 		}else if(e.getSource() == menuProducts) {
 			
 		}else if(e.getSource() == menuVouchers) {
-			
+			frame.dispose();
+			VoucherHandler.getInstance().viewVoucherManagementForm();
 		}else if(e.getSource() == menuCart) {
 			
 		}else if(e.getSource() == menuTransactions) {
+			
+		}else if(e.getSource() == menuLogout) {
 			
 		}
 		

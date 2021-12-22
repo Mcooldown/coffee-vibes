@@ -6,8 +6,8 @@ import models.Position;
 
 public class PositionHandler {
 
-	public static PositionHandler handler = null;
-	public Position position;
+	private static PositionHandler handler = null;
+	private Position position;
 	
 	public PositionHandler() {
 		position = new Position();
