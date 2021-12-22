@@ -78,25 +78,11 @@ public class EmployeeManagementForm implements ActionListener {
 		menuEmployees = new JMenuItem("Employees");
 		menuEmployees.setOpaque(true);		
 		menuEmployees.setBackground(Color.ORANGE);
-		menuProducts = new JMenuItem("Products");
-		menuVouchers = new JMenuItem("Vouchers");
-		menuCart = new JMenuItem("Cart");
 		menuTransactions = new JMenuItem("Transactions");						
 		menuLogout = new JMenuItem("Logout");
 		
-		if(authPosition.getName().equals("HRD") || authPosition.getName().equals("Manager")) {
-			menuBar.add(menuEmployees);			
-		}
-		if(authPosition.getName().equals("Product Admin") || authPosition.getName().equals("Barista")) {
-			menuBar.add(menuProducts);			
-		}
-		if(authPosition.getName().equals("Product Admin")) {
-			menuBar.add(menuVouchers);			
-		}
-		if(authPosition.getName().equals("Barista")) {
-			menuBar.add(menuCart);
-		}
-		if(authPosition.getName().equals("Barista") || authPosition.getName().equals("Manager")) {
+		menuBar.add(menuEmployees);
+		if(authPosition.getName().equals("Manager")) {
 			menuBar.add(menuTransactions);
 		}
 		
@@ -225,9 +211,6 @@ public class EmployeeManagementForm implements ActionListener {
 		btnUpdate.addActionListener(this);
 		btnDelete.addActionListener(this);
 		btnCancel.addActionListener(this);
-		menuProducts.addActionListener(this);
-		menuVouchers.addActionListener(this);
-		menuCart.addActionListener(this);
 		menuTransactions.addActionListener(this);
 		menuLogout.addActionListener(this);
 		
@@ -355,14 +338,6 @@ public class EmployeeManagementForm implements ActionListener {
 		}else if(e.getSource() == btnCancel) {
 			setInsertView(true);
 			clearForm();
-		}else if(e.getSource() == menuProducts) {
-			frame.dispose();
-			ProductHandler.getInstance().viewProductManagementForm();
-		}else if(e.getSource() == menuVouchers) {
-			frame.dispose();
-			VoucherHandler.getInstance().viewVoucherManagementForm();
-		}else if(e.getSource() == menuCart) {
-			
 		}else if(e.getSource() == menuTransactions) {
 			
 		}else if(e.getSource() == menuLogout) {

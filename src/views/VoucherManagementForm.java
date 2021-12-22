@@ -72,29 +72,15 @@ public class VoucherManagementForm implements ActionListener {
 
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
-		menuEmployees = new JMenuItem("Employees");
 		menuProducts = new JMenuItem("Products");
 		menuVouchers = new JMenuItem("Vouchers");
 		menuVouchers.setOpaque(true);		
 		menuVouchers.setBackground(Color.ORANGE);
-		menuCart = new JMenuItem("Cart");
-		menuTransactions = new JMenuItem("Transactions");						
 		menuLogout = new JMenuItem("Logout");
 		
-		if(authPosition.getName().equals("HRD") || authPosition.getName().equals("Manager")) {
-			menuBar.add(menuEmployees);			
-		}
-		if(authPosition.getName().equals("Product Admin") || authPosition.getName().equals("Barista")) {
-			menuBar.add(menuProducts);			
-		}
+		menuBar.add(menuProducts);
 		if(authPosition.getName().equals("Product Admin")) {
 			menuBar.add(menuVouchers);			
-		}
-		if(authPosition.getName().equals("Barista")) {
-			menuBar.add(menuCart);
-		}
-		if(authPosition.getName().equals("Barista") || authPosition.getName().equals("Manager")) {
-			menuBar.add(menuTransactions);
 		}
 		
 		menuBar.add(menuLogout);
@@ -184,9 +170,6 @@ public class VoucherManagementForm implements ActionListener {
 		btnDelete.addActionListener(this);
 		btnCancel.addActionListener(this);
 		menuProducts.addActionListener(this);
-		menuEmployees.addActionListener(this);
-		menuCart.addActionListener(this);
-		menuTransactions.addActionListener(this);
 		menuLogout.addActionListener(this);
 		
 		table.addMouseListener(new MouseAdapter() {
@@ -270,13 +253,6 @@ public class VoucherManagementForm implements ActionListener {
 		}else if(e.getSource() == menuProducts) {
 			frame.dispose();
 			ProductHandler.getInstance().viewProductManagementForm();
-		}else if(e.getSource() == menuEmployees) {
-			frame.dispose();
-			EmployeeHandler.getInstance().viewEmployeeManagementForm();
-		}else if(e.getSource() == menuCart) {
-			
-		}else if(e.getSource() == menuTransactions) {
-			
 		}else if(e.getSource() == menuLogout) {
 			int choice = JOptionPane.showConfirmDialog(frame, "Are you sure want to logout?");
 			

@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 import handlers.AuthHandler;
 import handlers.EmployeeHandler;
 import handlers.PositionHandler;
+import handlers.ProductHandler;
 import handlers.VoucherHandler;
 import models.Employee;
 import models.Position;
@@ -112,10 +113,8 @@ public class LoginForm implements ActionListener {
 			frame.dispose();
 			if(position.getName().equals("HRD") || position.getName().equals("Manager")) {
 				EmployeeHandler.getInstance().viewEmployeeManagementForm();
-			}else if(position.getName().equals("Product Admin")) {
-				VoucherHandler.getInstance().viewVoucherManagementForm();
-			}else if(position.getName().equals("Barista")) {
-				
+			}else if(position.getName().equals("Product Admin") || position.getName().equals("Barista")) {
+				ProductHandler.getInstance().viewProductManagementForm();
 			}
 		}else {
 			JOptionPane.showMessageDialog(frame, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);

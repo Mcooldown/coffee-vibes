@@ -25,9 +25,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import handlers.AuthHandler;
 import handlers.EmployeeHandler;
+import handlers.PositionHandler;
 import handlers.ProductHandler;
 import handlers.VoucherHandler;
+import models.Employee;
+import models.Position;
 import models.Product;
 
 public class ProductManagementForm implements ActionListener {
@@ -41,8 +45,11 @@ public class ProductManagementForm implements ActionListener {
 	private JButton btnInsert, btnUpdate, btnDelete, btnCancel;
 	private JTextField txtProductID, txtName, txtDescription, txtPrice, txtStock;
 	private JLabel lblProductID, lblName, lblDescription, lblPrice, lblStock;
+	private Employee authUser;
+	private Position authPosition;
 	
 	public ProductManagementForm() {
+		initAuthPosition();
 		initMenuBar();
 		initHeaderPanel();
 		initTablePanel();
@@ -54,24 +61,31 @@ public class ProductManagementForm implements ActionListener {
 		initFrame();
 		setInsertView(true);
 	}
+	private void initAuthPosition() {
+		authUser = AuthHandler.getInstance().getCurrentUser();
+		if(authUser == null) AuthHandler.getInstance().logout();
+		else {
+			authPosition = PositionHandler.getInstance().getPosition(String.valueOf(authUser.getPositionID()));
+		}
+	}
 
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
-		menuEmployees = new JMenuItem("Employees");
 		menuProducts = new JMenuItem("Products");
+		menuProducts.setOpaque(true);		
+		menuProducts.setBackground(Color.ORANGE);
 		menuVouchers = new JMenuItem("Vouchers");
-		menuCart = new JMenuItem("Cart");
-		menuTransactions = new JMenuItem("Transactions");
+		menuCart = new JMenuItem("Cart");					
 		menuLogout = new JMenuItem("Logout");
-
-		menuEmployees.setOpaque(true);		
-		menuEmployees.setBackground(Color.ORANGE);
 		
-		menuBar.add(menuEmployees);
-		menuBar.add(menuProducts);
-		menuBar.add(menuVouchers);
-		menuBar.add(menuCart);
-		menuBar.add(menuTransactions);
+		menuBar.add(menuProducts);			
+		if(authPosition.getName().equals("Product Admin")) {
+			menuBar.add(menuVouchers);			
+		}
+		if(authPosition.getName().equals("Barista")) {
+			menuBar.add(menuCart);
+		}
+		
 		menuBar.add(menuLogout);
 	}
 	
@@ -177,10 +191,8 @@ public class ProductManagementForm implements ActionListener {
 		btnUpdate.addActionListener(this);
 		btnDelete.addActionListener(this);
 		btnCancel.addActionListener(this);
-		menuProducts.addActionListener(this);
 		menuVouchers.addActionListener(this);
 		menuCart.addActionListener(this);
-		menuTransactions.addActionListener(this);
 		menuLogout.addActionListener(this);
 		
 		table.addMouseListener(new MouseAdapter() {
@@ -303,10 +315,9 @@ public class ProductManagementForm implements ActionListener {
 			VoucherHandler.getInstance().viewVoucherManagementForm();
 		}else if(e.getSource() == menuCart) {
 			
-		}else if(e.getSource() == menuTransactions) {
-			
 		}else if(e.getSource() == menuLogout) {
-			
+			frame.dispose();
+			AuthHandler.getInstance().logout();
 		}
 		
 	}
