@@ -137,15 +137,16 @@ public class Product {
 		return null;
 	}
 	
-	public boolean updateProduct(Integer productID, String name, String description, Integer price) {
-		String query = "UPDATE products SET name = ?, description = ?, price = ? WHERE productID = ?";
+	public boolean updateProduct() {
+		String query = "UPDATE products SET name = ?, description = ?, price = ?, stock = ? WHERE productID = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
 		
 		try {
 			ps.setString(1, name);
 			ps.setString(2, description);
 			ps.setInt(3, price);
-			ps.setInt(4, productID);
+			ps.setInt(4, stock);
+			ps.setInt(5, productID);
 			return ps.executeUpdate() == 1;
 			
 		} catch (SQLException e) {
@@ -154,7 +155,7 @@ public class Product {
 		return false;
 	}
 
-	public boolean deleteProduct(Integer productID) {
+	public boolean deleteProduct() {
 		String query = "DELETE FROM products WHERE productID = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
 		

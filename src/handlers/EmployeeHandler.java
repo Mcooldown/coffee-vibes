@@ -119,7 +119,11 @@ public class EmployeeHandler {
 				boolean passValidate = validateEmployee(name, salary, username, password);
 				
 				if(passValidate) {
-					boolean updated = employee.updateEmployee(Integer.parseInt(employeeID), name, Integer.parseInt(salary), username, password);
+					employee.setName(name);
+					employee.setSalary(Integer.parseInt(salary));
+					employee.setUsername(username);
+					employee.setPassword(password);
+					boolean updated = employee.updateEmployee();
 					if(!updated) {
 						errorMessage = "Update failed";
 					}
@@ -143,7 +147,7 @@ public class EmployeeHandler {
 				errorMessage = "Employee ID not exist";
 				return false;
 			}else {
-				boolean fired = employee.fireEmployee(employee.getEmployeeID());
+				boolean fired = employee.fireEmployee();
 				if(!fired) {
 					errorMessage = "Fire Failed";
 				}

@@ -29,8 +29,6 @@ import javax.swing.table.DefaultTableModel;
 import handlers.AuthHandler;
 import handlers.EmployeeHandler;
 import handlers.PositionHandler;
-import handlers.ProductHandler;
-import handlers.VoucherHandler;
 import models.Employee;
 import models.Position;
 
@@ -38,15 +36,15 @@ public class EmployeeManagementForm implements ActionListener {
 	
 	private JFrame frame;
 	private JMenuBar menuBar;
-	private JMenuItem menuEmployees, menuProducts, menuCart, menuTransactions, menuVouchers, menuLogout;
+	private JMenuItem menuEmployees, menuTransactions, menuLogout;
 	private JPanel mainPanel, headerPanel, tablePanel, formPanel, centerPanel, btnPanel;
 	private JTable table;
 	private JScrollPane scrollPane;
 	private JButton btnInsert, btnUpdate, btnDelete, btnCancel;
-	private JTextField txtEmployeeID, txtPositionID, txtName, txtSalary, txtUsername;
+	private JTextField txtEmployeeID, txtName, txtSalary, txtUsername, txtStatus;
 	private JPasswordField txtPassword;
 	private JComboBox<Position> listPosition;
-	private JLabel lblEmployeeID, lblPositionID, lblName, lblSalary, lblUsername, lblPassword;
+	private JLabel lblEmployeeID, lblPositionID, lblName, lblSalary, lblUsername, lblPassword, lblStatus;
 	private Employee authUser;
 	private Position authPosition;
 	
@@ -117,11 +115,12 @@ public class EmployeeManagementForm implements ActionListener {
 	}
 	
 	private void initFormPanel() {
-		formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+		formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
 		formPanel.setBorder(BorderFactory.createEmptyBorder(10,10, 10, 10));
 		
 		lblEmployeeID = new JLabel("Employee ID");
 		txtEmployeeID = new JTextField();
+		txtEmployeeID.setEditable(false);
 		
 		String[]positionArray = getPositionArray();
 		lblPositionID = new JLabel("Position");
@@ -129,12 +128,26 @@ public class EmployeeManagementForm implements ActionListener {
 
 		lblName = new JLabel("Name");
 		txtName = new JTextField();
+		
 		lblSalary = new JLabel("Salary");
 		txtSalary = new JTextField();
+		
+		lblStatus = new JLabel("Status");
+		txtStatus = new JTextField();
+		txtStatus.setEditable(false);
+		
 		lblUsername = new JLabel("Username");
 		txtUsername = new JTextField();
+		
 		lblPassword = new JLabel("Password");
 		txtPassword = new JPasswordField();
+		
+		if(!authPosition.getName().equals("HRD")) {
+			txtName.setEditable(false);
+			txtSalary.setEditable(false);
+			txtUsername.setEditable(false);
+			txtPassword.setEditable(false);
+		}
 		
 		formPanel.add(lblEmployeeID);
 		formPanel.add(txtEmployeeID);
@@ -144,6 +157,8 @@ public class EmployeeManagementForm implements ActionListener {
 		formPanel.add(txtName);
 		formPanel.add(lblSalary);
 		formPanel.add(txtSalary);
+		formPanel.add(lblStatus);
+		formPanel.add(txtStatus);
 		formPanel.add(lblUsername);
 		formPanel.add(txtUsername);
 		formPanel.add(lblPassword);
@@ -221,6 +236,7 @@ public class EmployeeManagementForm implements ActionListener {
 				txtEmployeeID.setText(String.valueOf(table.getValueAt(row,0)));
 				txtName.setText((String) table.getValueAt(row, 2));
 				txtSalary.setText(String.valueOf(table.getValueAt(row, 3)));
+				txtStatus.setText((String) table.getValueAt(row, 4));
 				txtUsername.setText((String) table.getValueAt(row, 5));
 				txtPassword.setText((String) table.getValueAt(row, 6));
 				setInsertView(false);
@@ -232,7 +248,7 @@ public class EmployeeManagementForm implements ActionListener {
 		frame = new JFrame("Coffee Vibes - Group 2 - BD01");
 		frame.setJMenuBar(menuBar);
 		frame.add(mainPanel);
-		frame.setSize(650, 600);
+		frame.setSize(650, 700);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
@@ -305,8 +321,14 @@ public class EmployeeManagementForm implements ActionListener {
 		
 		lblEmployeeID.setVisible(!isInsert);
 		txtEmployeeID.setVisible(!isInsert);
-		lblPositionID.setVisible(isInsert);
-		listPosition.setVisible(isInsert);
+		lblStatus.setVisible(!isInsert);
+		txtStatus.setVisible(!isInsert);
+		
+		if(!authPosition.getName().equals("HRD")) {
+			listPosition.setEnabled(false);
+		}else {
+			listPosition.setEnabled(isInsert);			
+		}
 	}
 	
 	private void clearForm() {

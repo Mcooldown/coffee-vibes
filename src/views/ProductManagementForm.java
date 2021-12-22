@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -26,6 +25,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import handlers.AuthHandler;
+import handlers.CartHandler;
 import handlers.EmployeeHandler;
 import handlers.PositionHandler;
 import handlers.ProductHandler;
@@ -38,11 +38,11 @@ public class ProductManagementForm implements ActionListener {
 
 	private JFrame frame;
 	private JMenuBar menuBar;
-	private JMenuItem menuEmployees, menuProducts, menuCart, menuTransactions, menuVouchers, menuLogout;
+	private JMenuItem menuProducts, menuCart,  menuVouchers, menuLogout;
 	private JPanel mainPanel, headerPanel, tablePanel, formPanel, centerPanel, btnPanel;
 	private JTable table;
 	private JScrollPane scrollPane;
-	private JButton btnInsert, btnUpdate, btnDelete, btnCancel;
+	private JButton btnInsert, btnUpdate, btnDelete, btnCancel, btnAddToCart;
 	private JTextField txtProductID, txtName, txtDescription, txtPrice, txtStock;
 	private JLabel lblProductID, lblName, lblDescription, lblPrice, lblStock;
 	private Employee authUser;
@@ -108,7 +108,7 @@ public class ProductManagementForm implements ActionListener {
 	
 	
 	private void initFormPanel() {
-		formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+		formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
 		formPanel.setBorder(BorderFactory.createEmptyBorder(10,10, 10, 10));
 		
 		lblProductID = new JLabel("Product ID");
@@ -122,6 +122,14 @@ public class ProductManagementForm implements ActionListener {
 		txtPrice = new JTextField();
 		lblStock = new JLabel("Stock");
 		txtStock = new JTextField();
+		
+		if(authPosition.getName().equals("Barista")) {
+			txtProductID.setEditable(false);
+			txtName.setEditable(false);
+			txtDescription.setEditable(false);
+			txtPrice.setEditable(false);
+			txtStock.setEditable(false);
+		}
 		
 		formPanel.add(lblProductID);
 		formPanel.add(txtProductID);
@@ -152,11 +160,20 @@ public class ProductManagementForm implements ActionListener {
 		btnDelete.setBackground(Color.RED);
 		btnCancel = new JButton("CANCEL");
 		btnCancel.setBackground(Color.LIGHT_GRAY);
+		btnAddToCart = new JButton("ADD TO CART");
+		btnAddToCart.setBackground(Color.GREEN);
 		
-		btnPanel.add(btnInsert);
+
+		if(authPosition.getName().equals("Product Admin")) {
+			btnPanel.add(btnInsert);
+			btnPanel.add(btnUpdate);
+			btnPanel.add(btnDelete);			
+		}
 		btnPanel.add(btnCancel);
-		btnPanel.add(btnUpdate);
-		btnPanel.add(btnDelete);
+
+		if(authPosition.getName().equals("Barista")) {
+			btnPanel.add(btnAddToCart);			
+		}
 	}
 
 	private void initMainPanel() {
@@ -191,6 +208,7 @@ public class ProductManagementForm implements ActionListener {
 		btnUpdate.addActionListener(this);
 		btnDelete.addActionListener(this);
 		btnCancel.addActionListener(this);
+		btnAddToCart.addActionListener(this);
 		menuVouchers.addActionListener(this);
 		menuCart.addActionListener(this);
 		menuLogout.addActionListener(this);
@@ -275,11 +293,17 @@ public class ProductManagementForm implements ActionListener {
 		btnUpdate.setVisible(!isInsert);
 		btnDelete.setVisible(!isInsert);
 		btnCancel.setVisible(!isInsert);
+		btnAddToCart.setVisible(!isInsert);
 		
 		lblProductID.setVisible(!isInsert);
 		txtProductID.setVisible(!isInsert);
-		lblStock.setVisible(isInsert);
-		txtStock.setVisible(isInsert);
+		txtStock.setEditable(isInsert);
+		
+		if(authPosition.getName().equals("Barista")) {
+			txtStock.setEditable(false);
+		}else {
+			txtStock.setEditable(isInsert);
+		}
 	}
 	
 	private void clearForm() {
@@ -310,14 +334,32 @@ public class ProductManagementForm implements ActionListener {
 		}else if(e.getSource() == btnCancel) {
 			setInsertView(true);
 			clearForm();
+		}else if(e.getSource() == btnAddToCart) {
+			try {
+				int productID = Integer.parseInt(txtProductID.getText().toString());
+				Product product = CartHandler.getInstance().getProduct(productID);
+				
+				if(product != null) {
+					frame.dispose();
+					CartHandler.getInstance().viewAddProductToCartForm(product);									
+				}else {
+					JOptionPane.showMessageDialog(frame, "Product ID not valid", "Error", JOptionPane.ERROR_MESSAGE);					
+				}
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(frame, "Product ID not valid", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}else if(e.getSource() == menuVouchers) {
 			frame.dispose();
 			VoucherHandler.getInstance().viewVoucherManagementForm();
 		}else if(e.getSource() == menuCart) {
 			
 		}else if(e.getSource() == menuLogout) {
-			frame.dispose();
-			AuthHandler.getInstance().logout();
+			int choice = JOptionPane.showConfirmDialog(frame, "Are you sure want to logout?");
+			
+			if(choice == JOptionPane.YES_OPTION) {
+				frame.dispose();
+				AuthHandler.getInstance().logout();
+			}
 		}
 		
 	}

@@ -119,7 +119,11 @@ public class ProductHandler {
 				boolean passValidate = validateProduct(name, description, price);
 				
 				if(passValidate) {
-					boolean updated = product.updateProduct(Integer.parseInt(productID), name, description, Integer.parseInt(price));
+					product.setName(name);
+					product.setDescription(description);
+					product.setPrice(Integer.parseInt(price));
+					
+					boolean updated = product.updateProduct();
 					if(!updated) {
 						errorMessage = "Update failed";
 					}
@@ -128,6 +132,19 @@ public class ProductHandler {
 					return false;
 				}
 			}
+		}
+	}
+	
+	public boolean updateProductStock(String productID, int stock) {
+		Product product = getProduct(productID);
+		product.setStock(stock);
+		boolean updated = product.updateProduct();
+		
+		if(updated) {
+			return true;			
+		}else {
+			errorMessage = "Update failed";
+			return false;
 		}
 	}
 	
@@ -143,7 +160,7 @@ public class ProductHandler {
 				errorMessage = "Product ID not exist";
 				return false;
 			}else {
-				boolean deleted = product.deleteProduct(Integer.parseInt(productID));
+				boolean deleted = product.deleteProduct();
 				if(!deleted) {
 					errorMessage = "Delete Failed";
 				}

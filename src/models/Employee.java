@@ -170,7 +170,7 @@ public class Employee {
 		return fetchEmployee("employeeID", employeeID);
 	}
 	
-	public boolean updateEmployee(int employeeID, String name, int salary, String username, String password) {
+	public boolean updateEmployee() {
 		String query = "UPDATE employees SET name = ?, salary = ?, username = ?, password = ? WHERE employeeID = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
 		
@@ -188,7 +188,7 @@ public class Employee {
 		return false;
 	}
 	
-	public boolean fireEmployee(int employeeID) {
+	public boolean fireEmployee() {
 		String query = "DELETE FROM employees WHERE employeeID = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
 		

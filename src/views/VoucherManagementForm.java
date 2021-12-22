@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -26,7 +25,6 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import handlers.AuthHandler;
-import handlers.EmployeeHandler;
 import handlers.PositionHandler;
 import handlers.ProductHandler;
 import handlers.VoucherHandler;
@@ -38,13 +36,13 @@ public class VoucherManagementForm implements ActionListener {
 	
 	private JFrame frame;
 	private JMenuBar menuBar;
-	private JMenuItem menuEmployees, menuProducts, menuVouchers, menuCart, menuTransactions, menuLogout;
+	private JMenuItem menuProducts, menuVouchers, menuLogout;
 	private JPanel mainPanel, headerPanel, tablePanel, formPanel, centerPanel, btnPanel;
 	private JTable table;
 	private JScrollPane scrollPane;
 	private JButton btnInsert, btnDelete, btnCancel;
-	private JTextField txtVoucherID, txtDiscount;
-	private JLabel lblVoucherID, lblDiscount;
+	private JTextField txtVoucherID, txtDiscount, txtStatus;
+	private JLabel lblVoucherID, lblDiscount, lblStatus;
 	private Employee authUser;
 	private Position authPosition;
 	
@@ -104,7 +102,7 @@ public class VoucherManagementForm implements ActionListener {
 	}
 	
 	private void initFormPanel() {
-		formPanel = new JPanel(new GridLayout(6, 2, 10, 10));
+		formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
 		formPanel.setBorder(BorderFactory.createEmptyBorder(10,10, 10, 10));
 		
 		lblVoucherID = new JLabel("Voucher ID");
@@ -113,10 +111,16 @@ public class VoucherManagementForm implements ActionListener {
 		lblDiscount = new JLabel("Discount");
 		txtDiscount = new JTextField();
 		
+		lblStatus = new JLabel("Status");
+		txtStatus = new JTextField();
+		txtStatus.setEditable(false);
+		
 		formPanel.add(lblVoucherID);
 		formPanel.add(txtVoucherID);
 		formPanel.add(lblDiscount);
 		formPanel.add(txtDiscount);
+		formPanel.add(lblStatus);
+		formPanel.add(txtStatus);
 	}
 	
 	private void initCenterPanel() {
@@ -177,7 +181,8 @@ public class VoucherManagementForm implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
 				txtVoucherID.setText(String.valueOf(table.getValueAt(row,0)));
-				txtDiscount.setText((String) table.getValueAt(row, 1));
+				txtDiscount.setText(String.valueOf(table.getValueAt(row, 1)));
+				txtStatus.setText((String)table.getValueAt(row, 2));
 				setInsertView(false);
 			}
 		});
@@ -187,7 +192,7 @@ public class VoucherManagementForm implements ActionListener {
 		frame = new JFrame("Coffee Vibes - Group 2 - BD01");
 		frame.setJMenuBar(menuBar);
 		frame.add(mainPanel);
-		frame.setSize(650, 600);
+		frame.setSize(650, 400);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
@@ -229,11 +234,15 @@ public class VoucherManagementForm implements ActionListener {
 		
 		lblVoucherID.setVisible(!isInsert);
 		txtVoucherID.setVisible(!isInsert);
+		txtDiscount.setEditable(isInsert);
+		lblStatus.setVisible(!isInsert);
+		txtStatus.setVisible(!isInsert);
 	}
 	
 	private void clearForm() {
 		txtVoucherID.setText("");
 		txtDiscount.setText("");
+		txtStatus.setText("");
 	}
 
 	@Override
