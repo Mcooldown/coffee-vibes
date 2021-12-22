@@ -26,6 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import handlers.EmployeeHandler;
+import handlers.ProductHandler;
 import handlers.VoucherHandler;
 import models.Voucher;
 
@@ -241,7 +242,8 @@ public class VoucherManagementForm implements ActionListener {
 			setInsertView(true);
 			clearForm();
 		}else if(e.getSource() == menuProducts) {
-			
+			frame.dispose();
+			ProductHandler.getInstance().viewProductManagementForm();
 		}else if(e.getSource() == menuEmployees) {
 			frame.dispose();
 			EmployeeHandler.getInstance().viewEmployeeManagementForm();
