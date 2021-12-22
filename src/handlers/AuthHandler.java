@@ -29,7 +29,7 @@ public class AuthHandler {
 	}
 	
 	public Employee getCurrentUser() {
-		return employee;
+		return authUser;
 	}
 
 	public boolean login(String username, String password) {

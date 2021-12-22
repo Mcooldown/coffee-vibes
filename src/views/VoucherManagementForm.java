@@ -25,8 +25,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import handlers.AuthHandler;
 import handlers.EmployeeHandler;
+import handlers.PositionHandler;
 import handlers.VoucherHandler;
+import models.Employee;
+import models.Position;
 import models.Voucher;
 
 public class VoucherManagementForm implements ActionListener {
@@ -40,8 +44,11 @@ public class VoucherManagementForm implements ActionListener {
 	private JButton btnInsert, btnDelete, btnCancel;
 	private JTextField txtVoucherID, txtDiscount;
 	private JLabel lblVoucherID, lblDiscount;
+	private Employee authUser;
+	private Position authPosition;
 	
 	public VoucherManagementForm() {
+		initAuthPosition();
 		initMenuBar();
 		initHeaderPanel();
 		initTablePanel();
@@ -53,23 +60,42 @@ public class VoucherManagementForm implements ActionListener {
 		initFrame();
 		setInsertView(true);
 	}
+	
+	private void initAuthPosition() {
+		authUser = AuthHandler.getInstance().getCurrentUser();
+		if(authUser == null) AuthHandler.getInstance().logout();
+		else {
+			authPosition = PositionHandler.getInstance().getPosition(String.valueOf(authUser.getPositionID()));
+		}
+	}
 
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
 		menuEmployees = new JMenuItem("Employees");
 		menuProducts = new JMenuItem("Products");
 		menuVouchers = new JMenuItem("Vouchers");
-		menuVouchers.setOpaque(true);
+		menuVouchers.setOpaque(true);		
 		menuVouchers.setBackground(Color.ORANGE);
 		menuCart = new JMenuItem("Cart");
-		menuTransactions = new JMenuItem("Transactions");
+		menuTransactions = new JMenuItem("Transactions");						
 		menuLogout = new JMenuItem("Logout");
 		
-		menuBar.add(menuEmployees);
-		menuBar.add(menuProducts);
-		menuBar.add(menuVouchers);
-		menuBar.add(menuCart);
-		menuBar.add(menuTransactions);
+		if(authPosition.getName().equals("HRD") || authPosition.getName().equals("Manager")) {
+			menuBar.add(menuEmployees);			
+		}
+		if(authPosition.getName().equals("Product Admin") || authPosition.getName().equals("Barista")) {
+			menuBar.add(menuProducts);			
+		}
+		if(authPosition.getName().equals("Product Admin")) {
+			menuBar.add(menuVouchers);			
+		}
+		if(authPosition.getName().equals("Barista")) {
+			menuBar.add(menuCart);
+		}
+		if(authPosition.getName().equals("Barista") || authPosition.getName().equals("Manager")) {
+			menuBar.add(menuTransactions);
+		}
+		
 		menuBar.add(menuLogout);
 	}
 	
@@ -250,7 +276,12 @@ public class VoucherManagementForm implements ActionListener {
 		}else if(e.getSource() == menuTransactions) {
 			
 		}else if(e.getSource() == menuLogout) {
+			int choice = JOptionPane.showConfirmDialog(frame, "Are you sure want to logout?");
 			
+			if(choice == JOptionPane.YES_OPTION) {
+				frame.dispose();
+				AuthHandler.getInstance().logout();
+			}
 		}
 		
 	}

@@ -1,11 +1,11 @@
 package main;
 
-import handlers.EmployeeHandler;
+import handlers.AuthHandler;
 
 public class Main {
 
 	public Main() {
-		EmployeeHandler.getInstance().viewEmployeeManagementForm();
+		AuthHandler.getInstance().viewLoginForm();
 	}
 	
 	public static void main(String[] args) {

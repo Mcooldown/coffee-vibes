@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import handlers.AuthHandler;
 import handlers.EmployeeHandler;
 import handlers.PositionHandler;
 import handlers.VoucherHandler;
@@ -45,8 +46,11 @@ public class EmployeeManagementForm implements ActionListener {
 	private JPasswordField txtPassword;
 	private JComboBox<Position> listPosition;
 	private JLabel lblEmployeeID, lblPositionID, lblName, lblSalary, lblUsername, lblPassword;
+	private Employee authUser;
+	private Position authPosition;
 	
 	public EmployeeManagementForm() {
+		initAuthPosition();
 		initMenuBar();
 		initHeaderPanel();
 		initTablePanel();
@@ -57,25 +61,44 @@ public class EmployeeManagementForm implements ActionListener {
 		initActionListener();
 		initFrame();
 		setInsertView(true);
+		
+	}
+	
+	private void initAuthPosition() {
+		authUser = AuthHandler.getInstance().getCurrentUser();
+		if(authUser == null) AuthHandler.getInstance().logout();
+		else {
+			authPosition = PositionHandler.getInstance().getPosition(String.valueOf(authUser.getPositionID()));
+		}
 	}
 
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
 		menuEmployees = new JMenuItem("Employees");
+		menuEmployees.setOpaque(true);		
+		menuEmployees.setBackground(Color.ORANGE);
 		menuProducts = new JMenuItem("Products");
 		menuVouchers = new JMenuItem("Vouchers");
 		menuCart = new JMenuItem("Cart");
-		menuTransactions = new JMenuItem("Transactions");
+		menuTransactions = new JMenuItem("Transactions");						
 		menuLogout = new JMenuItem("Logout");
-
-		menuEmployees.setOpaque(true);		
-		menuEmployees.setBackground(Color.ORANGE);
 		
-		menuBar.add(menuEmployees);
-		menuBar.add(menuProducts);
-		menuBar.add(menuVouchers);
-		menuBar.add(menuCart);
-		menuBar.add(menuTransactions);
+		if(authPosition.getName().equals("HRD") || authPosition.getName().equals("Manager")) {
+			menuBar.add(menuEmployees);			
+		}
+		if(authPosition.getName().equals("Product Admin") || authPosition.getName().equals("Barista")) {
+			menuBar.add(menuProducts);			
+		}
+		if(authPosition.getName().equals("Product Admin")) {
+			menuBar.add(menuVouchers);			
+		}
+		if(authPosition.getName().equals("Barista")) {
+			menuBar.add(menuCart);
+		}
+		if(authPosition.getName().equals("Barista") || authPosition.getName().equals("Manager")) {
+			menuBar.add(menuTransactions);
+		}
+		
 		menuBar.add(menuLogout);
 	}
 	
@@ -156,12 +179,14 @@ public class EmployeeManagementForm implements ActionListener {
 		btnDelete = new JButton("FIRE");
 		btnDelete.setBackground(Color.RED);
 		btnCancel = new JButton("CANCEL");
-		btnCancel.setBackground(Color.LIGHT_GRAY);
+		btnCancel.setBackground(Color.LIGHT_GRAY);		
 		
-		btnPanel.add(btnInsert);
-		btnPanel.add(btnCancel);
-		btnPanel.add(btnUpdate);
+		if(authPosition.getName().equals("HRD")) {
+			btnPanel.add(btnInsert);			
+			btnPanel.add(btnUpdate);
+		}
 		btnPanel.add(btnDelete);
+		btnPanel.add(btnCancel);
 	}
 
 	private void initMainPanel() {
@@ -242,7 +267,7 @@ public class EmployeeManagementForm implements ActionListener {
 		String name = txtName.getText().toString();
 		String salary = txtSalary.getText().toString();
 		String username = txtUsername.getText().toString();
-		String password = txtPassword.getText().toString();
+		String password = String.valueOf(txtPassword.getPassword());
 		
 		boolean inserted = EmployeeHandler.getInstance().insertEmployee(name, positionID, salary, username, password);
 		if(inserted) {
@@ -259,7 +284,7 @@ public class EmployeeManagementForm implements ActionListener {
 		String name = txtName.getText().toString();
 		String salary = txtSalary.getText().toString();
 		String username = txtUsername.getText().toString();
-		String password = txtPassword.getText().toString();
+		String password = String.valueOf(txtPassword.getPassword());
 		
 		boolean updated = EmployeeHandler.getInstance().updateEmployee(employeeID, name, salary, username, password);
 		
@@ -339,7 +364,12 @@ public class EmployeeManagementForm implements ActionListener {
 		}else if(e.getSource() == menuTransactions) {
 			
 		}else if(e.getSource() == menuLogout) {
+			int choice = JOptionPane.showConfirmDialog(frame, "Are you sure want to logout?");
 			
+			if(choice == JOptionPane.YES_OPTION) {
+				frame.dispose();
+				AuthHandler.getInstance().logout();
+			}
 		}
 		
 	}

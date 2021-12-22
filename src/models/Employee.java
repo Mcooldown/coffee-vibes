@@ -145,7 +145,8 @@ public class Employee {
 	}
 	
 	public Employee fetchEmployee(String key, String value) {
-		String query = "SELECT * FROM employees WHERE " + key + " = " + value;
+		String query = "SELECT * FROM employees WHERE " + key + " = '" + value + "'";
+		
 		ResultSet rs =connect.executeQuery(query);
 	
 		try {
