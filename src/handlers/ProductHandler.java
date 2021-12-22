@@ -39,6 +39,12 @@ public class ProductHandler {
 				errorMessage = "Description must be filled";
 				return false;
 			}
+			
+			if (price.equals("")) {
+				errorMessage = "Price must be filled";
+				return false;
+			}
+			
 			int priceTemp = 0;
 			try {
 				priceTemp = Integer.parseInt(price);
@@ -61,6 +67,11 @@ public class ProductHandler {
 		boolean passValidate = validateProduct(name, description, price);
 		
 		if(passValidate) {
+			
+			if (stock.equals("")) {
+				errorMessage = "Stock must be filled";
+				return false;
+			}
 			
 			int stockTemp = 0;
 			try {
