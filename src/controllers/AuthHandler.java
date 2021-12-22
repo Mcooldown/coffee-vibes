@@ -1,4 +1,4 @@
-package handlers;
+package controllers;
 
 import models.Employee;
 import views.LoginForm;

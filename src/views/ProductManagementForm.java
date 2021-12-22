@@ -24,12 +24,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import handlers.AuthHandler;
-import handlers.CartHandler;
-import handlers.EmployeeHandler;
-import handlers.PositionHandler;
-import handlers.ProductHandler;
-import handlers.VoucherHandler;
+import controllers.AuthHandler;
+import controllers.CartHandler;
+import controllers.EmployeeHandler;
+import controllers.PositionHandler;
+import controllers.ProductHandler;
+import controllers.VoucherHandler;
 import models.Employee;
 import models.Position;
 import models.Product;
@@ -352,7 +352,8 @@ public class ProductManagementForm implements ActionListener {
 			frame.dispose();
 			VoucherHandler.getInstance().viewVoucherManagementForm();
 		}else if(e.getSource() == menuCart) {
-			
+			frame.dispose();
+			CartHandler.getInstance().viewCart();
 		}else if(e.getSource() == menuLogout) {
 			int choice = JOptionPane.showConfirmDialog(frame, "Are you sure want to logout?");
 			

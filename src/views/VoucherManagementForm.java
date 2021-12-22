@@ -24,10 +24,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import handlers.AuthHandler;
-import handlers.PositionHandler;
-import handlers.ProductHandler;
-import handlers.VoucherHandler;
+import controllers.AuthHandler;
+import controllers.PositionHandler;
+import controllers.ProductHandler;
+import controllers.VoucherHandler;
 import models.Employee;
 import models.Position;
 import models.Voucher;

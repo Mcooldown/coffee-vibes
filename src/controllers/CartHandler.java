@@ -1,4 +1,4 @@
-package handlers;
+package controllers;
 
 import java.util.ArrayList;
 
@@ -54,27 +54,23 @@ public class CartHandler {
 			Product product = ProductHandler.getInstance().getProduct(String.valueOf(productID));
 			
 			if(product != null) {
-				if(product.getStock() < quantityInt) {
-					errorMessage = "Insufficient Stock of Product";
-					return false;
-				}
 				int existIndex = searchCartItem(productIDInt);				
 				
-				if(existIndex != -1) {
-					boolean updateQuantity = updateCartProductQuantity(productIDInt, quantityInt);
+				if(existIndex != -1) {					
+					if(product.getStock() < quantityInt + listItem.get(existIndex).getQuantity()) {
+						errorMessage = "Insufficient Stock of Product";
+						return false;
+					}
+					updateCartProductQuantity(productIDInt, quantityInt);
 				}else {
+					if(product.getStock() < quantityInt) {
+						errorMessage = "Insufficient Stock of Product";
+						return false;
+					}
 					CartItem cartItem = new CartItem(getProduct(productIDInt), quantityInt);
 					listItem.add(cartItem);
 				}
-				
-				boolean updateStock = updateProductStock(productIDInt, product.getStock()-quantityInt);
-				if(updateStock) {
-					return true;
-				}else {
-					errorMessage = "Update stock failed";
-					return false;
-				}
-				
+				return true;
 			}else {
 				errorMessage = "Product Not found";
 				return false;
@@ -103,7 +99,6 @@ public class CartHandler {
 	}
 	
 	public boolean updateProductStock(int productID, int stock) {
-		
 		boolean updated = ProductHandler.getInstance().updateProductStock(String.valueOf(productID), stock);
 		if(updated) {
 			return true; 

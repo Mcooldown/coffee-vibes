@@ -18,10 +18,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import handlers.AuthHandler;
-import handlers.CartHandler;
-import handlers.PositionHandler;
-import handlers.ProductHandler;
+import controllers.AuthHandler;
+import controllers.CartHandler;
+import controllers.PositionHandler;
+import controllers.ProductHandler;
 import models.Employee;
 import models.Position;
 import models.Product;

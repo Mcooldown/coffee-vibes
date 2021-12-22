@@ -1,6 +1,6 @@
 package main;
 
-import handlers.AuthHandler;
+import controllers.AuthHandler;
 
 public class Main {
 

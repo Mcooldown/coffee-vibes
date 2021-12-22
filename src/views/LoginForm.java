@@ -16,11 +16,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import handlers.AuthHandler;
-import handlers.EmployeeHandler;
-import handlers.PositionHandler;
-import handlers.ProductHandler;
-import handlers.VoucherHandler;
+import controllers.AuthHandler;
+import controllers.EmployeeHandler;
+import controllers.PositionHandler;
+import controllers.ProductHandler;
+import controllers.VoucherHandler;
 import models.Employee;
 import models.Position;
 

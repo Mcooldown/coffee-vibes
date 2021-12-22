@@ -26,9 +26,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import handlers.AuthHandler;
-import handlers.EmployeeHandler;
-import handlers.PositionHandler;
+import controllers.AuthHandler;
+import controllers.EmployeeHandler;
+import controllers.PositionHandler;
 import models.Employee;
 import models.Position;
 
