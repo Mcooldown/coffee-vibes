@@ -131,7 +131,7 @@ public class AddProductToCartForm implements ActionListener {
 		btnPanel.setBorder(BorderFactory.createEmptyBorder(10,10, 10, 10));
 		btnCancel = new JButton("CANCEL");
 		btnCancel.setBackground(Color.LIGHT_GRAY);
-		btnAddToCart = new JButton("ADD TO CART");
+		btnAddToCart = new JButton("CONFIRM");
 		btnAddToCart.setBackground(Color.GREEN);
 		
 		btnPanel.add(btnCancel);

@@ -87,7 +87,7 @@ public class Voucher {
 	}
 	
 	public Voucher getVoucher(String voucherID) {
-		String query = "SELECT * FROM vouchers WHERE voucherID = " + voucherID;
+		String query = "SELECT * FROM vouchers WHERE status = 'Available' AND voucherID = " + voucherID;
 		ResultSet rs = connect.executeQuery(query);
 		
 		try {

@@ -71,14 +71,22 @@ public class Transaction {
 	
 	public int insertTransaction() {
 		
-		String query = "INSERT INTO transactions (purchaseDate, voucherID, employeeID, totalPrice) VALUES (?,?,?,?)";
+		String query = null;
+		if(voucherID == 0) {
+			query = "INSERT INTO transactions (purchaseDate, employeeID, totalPrice) VALUES (?,?,?)";			
+		}else {
+			query = "INSERT INTO transactions (purchaseDate, employeeID, totalPrice, voucherID) VALUES (?,?,?,?)";						
+		}
 		PreparedStatement ps = connect.prepareStatement(query);
+		
 		
 		try {
 			ps.setDate(1,purchaseDate);
-			ps.setInt(2, voucherID);
-			ps.setInt(3, employeeID);
-			ps.setInt(4, totalPrice);
+			ps.setInt(2, employeeID);
+			ps.setInt(3, totalPrice);
+			if(voucherID != 0) {
+				ps.setInt(4, voucherID);				
+			}
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			if(rs.next()) {
@@ -92,20 +100,21 @@ public class Transaction {
 	}
 	
 	public boolean insertTransactionItem() {
-		String query = "INSERT INTO transactions (purchaseDate, voucherID, employeeID, totalPrice) VALUES (?,?,?,?)";
-		PreparedStatement ps = connect.prepareStatement(query);
 		
-		try {
-			ps.setDate(1,purchaseDate);
-			ps.setInt(2, voucherID);
-			ps.setInt(3, employeeID);
-			ps.setInt(4, totalPrice);
-			return ps.executeUpdate() == 1;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (TransactionItem transactionItem : listTransactionItem) {
+			String query = "INSERT INTO transaction_items (transactionID, productID, quantity) VALUES (?,?,?)";
+			PreparedStatement ps = connect.prepareStatement(query);
+			try {
+				ps.setInt(1,transactionItem.getTransactionID());
+				ps.setInt(2, transactionItem.getProductID());
+				ps.setInt(3, transactionItem.getQuantity());
+				ps.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return false;
+		return true;
 	}
 	
 	private Transaction mapTransaction(ResultSet rs) {

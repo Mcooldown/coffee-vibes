@@ -211,10 +211,6 @@ public class CartManagementForm implements ActionListener {
 		frame.setVisible(true);
 	}
 	
-	private void checkout() {
-		JOptionPane.showMessageDialog(frame, "This is checkout");
-	}
-	
 	private void deleteCartItem() {
 		String productID = txtProductID.getText().toString();
 		
@@ -241,6 +237,15 @@ public class CartManagementForm implements ActionListener {
 		txtName.setText("");
 		txtPrice.setText("");
 		txtQuantity.setText("");
+	}
+	
+	private void checkout() {
+		if(CartHandler.getInstance().getCart().size() > 0) {
+			frame.dispose();
+			CartHandler.getInstance().viewCheckOutForm();			
+		}else {
+			JOptionPane.showMessageDialog(frame, "Cannot checkout. No items in the cart", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	@Override

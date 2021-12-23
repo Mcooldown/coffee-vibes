@@ -19,7 +19,7 @@ public class TransactionHandler {
 		transaction = new Transaction();
 	}
 
-	public TransactionHandler getInstance() {
+	public static TransactionHandler getInstance() {
 		if(handler == null) {
 			handler = new TransactionHandler();
 		}
@@ -37,30 +37,44 @@ public class TransactionHandler {
 	public boolean insertTransaction(String voucherID, String employeeID, int totalPayment) {
 		
 //		Update voucher status / delete voucher
+		int voucherIDInt = 0;
 		if(!voucherID.equals("")) {
 			boolean updateVoucherStatus = VoucherHandler.getInstance().updateVoucherStatus(voucherID);
 			if(!updateVoucherStatus) {
 				errorMessage = "Update voucher status failed";
 				return false;
 			}
+			try {
+				voucherIDInt = Integer.parseInt(voucherID);
+			} catch (Exception e) {
+				errorMessage = "Voucher ID not valid";
+				return false;
+			}
 		}
 		
 //		Validate employee ID & total payment
 		if(employeeID.equals("")) {
-			errorMessage = "Employee ID not exist";
+			errorMessage = "Employee ID not valid";
 			return false;
 		}
-		if(totalPayment < 0) {
-			errorMessage = "Minimum 0 of total payment";
+		int employeeIDInt = 0;
+		try {
+			employeeIDInt = Integer.parseInt(employeeID);
+		} catch (Exception e) {
+			errorMessage = "Employee ID not valid";
+			return false;
 		}
 		
-//		Get Current Date
+		if(totalPayment < 0) {
+			errorMessage = "Minimum 0 of total payment";
+			return false;
+		}
+
+		//		Insert transaction
 		long millis=System.currentTimeMillis();
 		Date currentDate = new Date(millis);
-		
-//		Insert transaction
-		Transaction newTransaction = new Transaction(0, currentDate, Integer.parseInt(voucherID), Integer.parseInt(employeeID), totalPayment);
-		int newTransactionID = transaction.insertTransaction();
+		Transaction newTransaction = new Transaction(0, currentDate,voucherIDInt, employeeIDInt, totalPayment);
+		int newTransactionID = newTransaction.insertTransaction();
 		
 		ArrayList<CartItem> listItem = CartHandler.getInstance().getCart();
 		ArrayList<TransactionItem> listTransactionItem = new ArrayList<>();
@@ -77,8 +91,8 @@ public class TransactionHandler {
 		}
 		
 //		insert list of transaction item
-		transaction.setListTransactionItem(listTransactionItem);
-		transaction.insertTransactionItem();
+		newTransaction.setListTransactionItem(listTransactionItem);
+		newTransaction.insertTransactionItem();
 		
 //		clear cart
 		CartHandler.getInstance().clearCart();
