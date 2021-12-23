@@ -52,7 +52,7 @@ public class VoucherHandler {
 				return false;
 			}
 			
-			Voucher newVoucher = new Voucher(0, discountInt, "Active");
+			Voucher newVoucher = new Voucher(0, discountInt, "Available");
 			
 			boolean inserted = newVoucher.generateVoucher();
 			if(!inserted) {
@@ -66,23 +66,35 @@ public class VoucherHandler {
 		return voucher.getVoucher(voucherID);
 	}
 	
-	public boolean deleteVoucher(String voucherID) {
+	public Voucher validateVoucherExist (String voucherID) {
 		if(voucherID.equals("")) {
 			errorMessage = "Voucher ID must be filled";
-			return false;
+			return null;
 		}else {
 			Voucher voucher = getVoucher(voucherID);
 			
 			if(voucher == null) {
 				errorMessage = "Voucher ID not exist";
-				return false;
+				return null;
 			}else {
-				boolean deleted = voucher.deleteVoucher(voucher.getVoucherID());
-				if(!deleted) {
-					errorMessage = "Delete Failed";
-				}
-				return deleted;
+				return voucher;
 			}
 		}
+	}
+	
+	public boolean updateVoucherStatus(String voucherID) {
+		
+		Voucher voucher = validateVoucherExist(voucherID);
+		boolean updated = voucher.updateVoucherStatus(voucher.getVoucherID());
+		return updated;
+	}
+	
+	public boolean deleteVoucher(String voucherID) {
+		Voucher voucher = validateVoucherExist(voucherID);
+		boolean deleted = voucher.deleteVoucher(voucher.getVoucherID());
+		if(!deleted) {
+			errorMessage = "Delete Failed";
+		}
+		return deleted;
 	}
 }

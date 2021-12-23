@@ -45,7 +45,7 @@ public final class Connect {
 	
 	public PreparedStatement prepareStatement(String query) {
 		try {
-			return con.prepareStatement(query);
+			return con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

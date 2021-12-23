@@ -103,9 +103,7 @@ public class Voucher {
 		return null;	
 	}
 	
-	public boolean deleteVoucher(int voucherID) {
-		
-		String query = "DELETE FROM vouchers WHERE voucherID = ?";
+	public boolean executeUpdate(String query) {
 		PreparedStatement ps = connect.prepareStatement(query);
 		
 		try {
@@ -117,5 +115,14 @@ public class Voucher {
 		}
 		return false;
 	}
-
+	
+	public boolean updateVoucherStatus(int voucherID) {
+		String query = "UPDATE vouchers SET status = 'Used' WHERE voucherID = ?";
+		return executeUpdate(query);
+	}
+	
+	public boolean deleteVoucher(int voucherID) {
+		String query = "DELETE FROM vouchers WHERE voucherID = ?";
+		return executeUpdate(query);
+	}
 }
