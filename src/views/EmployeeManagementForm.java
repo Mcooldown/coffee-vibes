@@ -29,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import controllers.AuthHandler;
 import controllers.EmployeeHandler;
 import controllers.PositionHandler;
+import controllers.TransactionHandler;
 import models.Employee;
 import models.Position;
 
@@ -361,7 +362,8 @@ public class EmployeeManagementForm implements ActionListener {
 			setInsertView(true);
 			clearForm();
 		}else if(e.getSource() == menuTransactions) {
-			
+			frame.dispose();
+			TransactionHandler.getInstance().viewTransactionManagementForm();
 		}else if(e.getSource() == menuLogout) {
 			int choice = JOptionPane.showConfirmDialog(frame, "Are you sure want to logout?");
 			
