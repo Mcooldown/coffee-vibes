@@ -187,8 +187,9 @@ public class EmployeeManagementForm implements ActionListener {
 		if(authPosition.getName().equals("HRD")) {
 			btnPanel.add(btnInsert);			
 			btnPanel.add(btnUpdate);
+		}else {
+			btnPanel.add(btnDelete);			
 		}
-		btnPanel.add(btnDelete);
 		btnPanel.add(btnCancel);
 	}
 
